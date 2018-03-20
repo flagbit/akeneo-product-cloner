@@ -1,0 +1,4 @@
+flagbit_product_cloner_product_model_clone:
+    path:     /flagbit/product-model/clone
+    defaults: { _controller: flagbit_product_cloner.controller.product_model:cloneAction }
+    methods:  [POST]

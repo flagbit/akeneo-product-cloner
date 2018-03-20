@@ -1,0 +1,31 @@
+extensions:
+    flagbit-product-model-edit-form-clone-button:
+        module: flagbit/product-edit-form/clone
+        parent: pim-product-model-edit-form-secondary-actions
+        targetZone: secondary-actions
+        aclResourceId: pim_enrich_product_model_remove
+        position: 90
+        config:
+            formName: flagbit-product-model-edit-form-clone-modal
+
+    flagbit-product-model-edit-form-clone-modal:
+        module: flagbit/product-edit-form/clone-modal
+        parent: pim/form/common/creation/modal
+        config:
+           labels:
+               title: flagbit.confirmation.clone.product_model
+               subTitle: pim_menu.item.product_model
+               content: confirmation.clone.product_model
+           picture: illustrations/Product-model.svg
+           successMessage: flagbit.entity.product_model.info.create_successful
+           postUrl: flagbit_product_cloner_product_model_clone
+           editRoute: pim_enrich_product_index
+
+    flagbit-product-model-edit-form-create-sku:
+        module: pim/form/common/creation/field
+        parent: flagbit-product-model-edit-form-clone-modal
+        targetZone: fields
+        position: 10
+        config:
+            identifier: code
+            label: pim_enrich.entity.create_popin.code

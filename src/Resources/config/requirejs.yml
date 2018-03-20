@@ -1,0 +1,8 @@
+config:
+    paths:
+        flagbit/product-edit-form/clone:          flagbitproductcloner/js/product/form/clone
+        flagbit/product-edit-form/clone-modal:    flagbitproductcloner/js/product/form/clone-modal
+
+        flagbit/template/product/clone-button:    flagbitproductcloner/templates/product/clone-button.html
+        flagbit/template/product/clone-modal:     flagbitproductcloner/templates/product/clone-modal.html
+

@@ -1,0 +1,11 @@
+services:
+    flagbit_product_cloner.controller.product_model:
+        class: Flagbit\Bundle\ProductClonerBundle\Controller\ProductModelController
+        arguments:
+            - '@pim_catalog.repository.product_model'
+            - '@pim_serializer'
+            - '@pim_catalog.factory.product_model'
+            - '@pim_catalog.updater.product_model'
+            - '@pim_catalog.saver.product_model'
+            - '@pim_catalog.validator.product'
+            - '@pim_enrich.normalizer.violation'

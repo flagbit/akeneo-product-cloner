@@ -1,0 +1,27 @@
+{
+  "name": "flagbit/product-cloner-bundle",
+  "description": "Add the functionality pf cloning products within Akeneo",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Antonio Mansilla",
+      "email": "antonio.mansilla@flagbit.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Flagbit\\Bundle\\ProductClonerBundle\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/akeneo/pim-community-dev.git",
+      "branch": "master"
+    }
+  ],
+  "require": {
+    "akeneo/pim-community-dev": "^2.0"
+  }
+}

@@ -1,29 +1,58 @@
-# README #
+# Flagbit ProductClonerBundle for Akeneo PIM CE & EE
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This bundle is aimed to offer product clone functionality within Akeneo PIM.
 
-### What is this repository for? ###
+### Functionalities ###
+* Clone a product model
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+### Installation ###
+Installation is a quick 4 step process:
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+1. Add the repository
+2. Download FlagbitProductClonerBundle using composer
+3. Enable the bundle
+4. Import the routing
 
-### Contribution guidelines ###
+#### Step 1: Add the repository ####
+First manually add the repository to your `composer.json` executing the following command:
 
-* Writing tests
-* Code review
-* Other guidelines
+``` bash
+$ composer config repositories.productcloner vcs git@bitbucket.org:flagbit/akeneo-productclonebundle.git
+```
+#### Step 2: Download FlagbitProductClonerBundle using composer ####
+Once the repository was added to your ``composer.json`, install the bundle using the following command:
 
-### Who do I talk to? ###
+``` bash
+$ composer require flagbit/product-cloner-bundle
+```
 
-* Repo owner or admin
-* Other community or team contact
+#### Step 3: Enable the bundle ####
+
+Enable the bundle in the kernel:
+
+``` php
+<?php
+
+// app/AppKernel.php
+
+protected function registerProjectBundles()
+{
+    return [
+        // ...
+        new Flagbit\Bundle\ProductClonerBundle\FlagbitProductClonerBundle(),
+        // ...
+    ];
+}
+```
+
+#### Step 4: Import the routing ####
+Now that you have activated and configured the bundle, all that is left to do is import the FlagbitProductClonerBundle
+routing files.
+
+``` yaml
+# app/config/routing.yml
+flagbit_product_cloner:
+    resource: "@FlagbitProductClonerBundle/Resources/config/routing.yml"
+
+```
