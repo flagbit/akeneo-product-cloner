@@ -1,8 +1,10 @@
 {
   "name": "flagbit/product-cloner-bundle",
-  "description": "Add the functionality pf cloning products within Akeneo",
+  "description": "The Flagbit Product Cloner Bundle gives you the possibility to quick cloning products within Akeneo PIM",
+  "keywords": ["akeneo", "product", "cloner"],
+  "type": "library",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Antonio Mansilla",
@@ -23,5 +25,10 @@
   ],
   "require": {
     "akeneo/pim-community-dev": "^2.0"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "*",
+    "squizlabs/php_codesniffer": "*",
+    "overtrue/phplint": "*"
   }
 }
