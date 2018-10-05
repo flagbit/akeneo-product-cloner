@@ -1,5 +1,9 @@
 # Flagbit ProductClonerBundle for Akeneo PIM
 
+[![Build Status](https://img.shields.io/travis/Flagbit/akeneo-product-cloner.svg?style=flat-square)](https://travis-ci.org/Flagbit/akeneo-product-cloner)
+[![Packagist Version](https://img.shields.io/packagist/v/Flagbit/akeneo-product-cloner.svg?style=flat-square)](https://packagist.org/packages/flagbit/product-cloner-bundle)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+
 This bundle is aimed to offer product clone functionality within Akeneo PIM.
 
 ## Functionalities ##
