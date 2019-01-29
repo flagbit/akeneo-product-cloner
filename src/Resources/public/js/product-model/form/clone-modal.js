@@ -13,7 +13,7 @@ define(
         'oro/loading-mask',
         'pim/router',
         'oro/messenger',
-        'flagbit/template/product/clone-modal'
+        'pim/template/form/creation/modal'
     ],
     function (
         $,
@@ -32,44 +32,31 @@ define(
         return BaseForm.extend({
             config: {},
             template: _.template(template),
-            globalErrors: [],
+
             /**
              * {@inheritdoc}
              */
             initialize(meta) {
                 this.config = meta.config;
-                this.globalErrors = [];
+
                 BaseForm.prototype.initialize.apply(this, arguments);
             },
-            getFieldsFormName() {
-                if (this.getRoot().model.has('parent')) {
-                    return this.config.variantFormName;
-                }
-                else {
-                    return this.config.productFormName;
-                }
-            },
 
+            /**
+             * {@inheritdoc}
+             */
             render() {
                 this.$el.html(this.template({
-                    modalTitle: __(this.config.labels.title),
-                    subTitle: __(this.config.labels.subTitle),
-                    content: __(this.config.labels.content),
+                    titleLabel: __(this.config.labels.title),
+                    subTitleLabel: __(this.config.labels.subTitle),
+                    contentLabel: __(this.config.labels.content),
                     picture: this.config.picture,
-                    errors: this.globalErrors
+                    fields: null
                 }));
 
-                return FormBuilder.build(this.getFieldsFormName()).then(form => {
-                    this.addExtension(
-                        form.code,
-                        form,
-                        'fields-container',
-                        10000
-                    );
-                    form.configure();
-                    this.renderExtensions();
-                    return this;
-                });
+                this.renderExtensions();
+
+                return this;
             },
 
             /**
@@ -80,9 +67,10 @@ define(
              * @return {Promise}
              */
             open() {
-
                 const deferred = $.Deferred();
+
                 const modal = new Backbone.BootstrapModal({
+                    title: __(this.config.labels.title),
                     content: '',
                     cancelText: __('pim_enrich.entity.create_popin.labels.cancel'),
                     okText: __('pim_enrich.entity.create_popin.labels.save'),
@@ -95,8 +83,9 @@ define(
                 const modalBody = modal.$('.modal-body');
                 modalBody.addClass('creation');
 
-                this.setElement(modalBody);
-                this.render();
+                this.render()
+                    .setElement(modalBody)
+                    .render();
 
                 modal.on('cancel', () => {
                     deferred.reject();
@@ -125,11 +114,30 @@ define(
             },
 
             /**
+             * Normalize the path property for validation errors
+             * @param  {Array} errors
+             * @return {Array}
+             */
+            normalize(errors) {
+                const values = errors.values || [];
+
+                return values.map(error => {
+                    if (!error.path) {
+                        error.path = error.attribute;
+                    }
+
+                    return error;
+                })
+            },
+
+            /**
              * Save the form content by posting it to backend
              *
              * @return {Promise}
              */
             save() {
+                this.validationErrors = {};
+
                 const loadingMask = new LoadingMask();
                 this.$el.empty().append(loadingMask.render().$el.show());
 
@@ -146,9 +154,15 @@ define(
                     data: JSON.stringify(data)
                 }).fail(function (response) {
                     if (response.responseJSON) {
-                        this.globalErrors = response.responseJSON.values;
-                        this.render();
+                        this.getRoot().trigger(
+                            'pim_enrich:form:entity:bad_request',
+                            {'sentData': this.getFormData(), 'response': response.responseJSON.values}
+                        );
                     }
+
+                    this.validationErrors = response.responseJSON ?
+                        this.normalize(response.responseJSON) : [{message: __('error.common')}];
+                    this.render();
                 }.bind(this))
                     .always(() => loadingMask.remove());
             }

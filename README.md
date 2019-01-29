@@ -8,6 +8,7 @@ This bundle is aimed to offer product clone functionality within Akeneo PIM.
 
 ## Functionalities ##
 * Clone a product model
+* Clone a product or a variant product
 
 
 ## Installation ##
@@ -61,7 +62,7 @@ yarn run webpack
 ```
 
 ## How to use it ##
-Open a product from type **product model** and there open the **options dialog** at the **right corner**.
+Open a product and there open the **options dialog** at the **right corner**.
 You can see it here on the screen:  
 ![Product Model Clone Screen](https://raw.githubusercontent.com/Flagbit/akeneo-product-cloner/master/screens/product_model_clone.png "Product Model Clone Screen")
 

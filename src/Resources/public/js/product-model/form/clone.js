@@ -4,42 +4,40 @@
  * Clone product extension
  */
 define([
-    'jquery',
     'pim/form',
     'underscore',
     'oro/translator',
     'backbone',
     'pim/form-builder',
-    'flagbit/template/product/clone-button',
-    'pim/form-modal',
+    'flagbit/template/product-model/clone-button',
+    'flagbit/template/product-model/clone-modal',
     ],
     function (
-        $,
         BaseForm,
         _,
         __,
         Backbone,
         FormBuilder,
         template,
-        FormModal
+        templateModal
     ) {
         return BaseForm.extend({
             template: _.template(template),
+            templateModal: _.template(templateModal),
+
+            events: {
+                'click .clone-product-model-button': 'openModal'
+            },
 
             initialize(config) {
                 this.config = config.config;
+
                 BaseForm.prototype.initialize.apply(this, arguments);
             },
 
             openModal() {
                 return FormBuilder.build(this.config.formName).then(modal => {
-
-                    const initialModalState = {
-                        parent: this.getRoot().model.get('parent'),
-                        values: {},
-                        code_to_clone: this.getRoot().model.get('identifier')
-                    };
-                    modal.setData(initialModalState);
+                    modal.setData('code_to_clone', this.getRoot().model.get('code'));
                     modal.open();
                 });
             },
@@ -61,9 +59,6 @@ define([
 
                 this.$el.html(this.template());
 
-                $('.clone-product-button').on('click', () => {
-                    this.openModal();
-                });
                 return this;
             }
         });
