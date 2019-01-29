@@ -2,7 +2,6 @@
 
 namespace Flagbit\Bundle\ProductClonerBundle\Controller;
 
-
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
