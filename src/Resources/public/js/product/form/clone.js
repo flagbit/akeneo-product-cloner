@@ -11,7 +11,6 @@ define([
     'backbone',
     'pim/form-builder',
     'flagbit/template/product/clone-button',
-    'pim/form-modal',
     ],
     function (
         $,
@@ -20,8 +19,7 @@ define([
         __,
         Backbone,
         FormBuilder,
-        template,
-        FormModal
+        template
     ) {
         return BaseForm.extend({
             template: _.template(template),
@@ -34,10 +32,21 @@ define([
             openModal() {
                 return FormBuilder.build(this.config.formName).then(modal => {
 
+                    const rootModel = this.getRoot().model;
+                    var productType, codeToClone;
+                    if (rootModel.has('identifier')) {
+                        productType = 'product';
+                        codeToClone = rootModel.get('identifier')
+                    } else {
+                        productType = 'model';
+                        codeToClone = rootModel.get('code')
+                    }
+
                     const initialModalState = {
-                        parent: this.getRoot().model.get('parent'),
+                        parent: rootModel.get('parent'),
                         values: {},
-                        code_to_clone: this.getRoot().model.get('identifier')
+                        code_to_clone: codeToClone,
+                        type: productType
                     };
                     modal.setData(initialModalState);
                     modal.open();

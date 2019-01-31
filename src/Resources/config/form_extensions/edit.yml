@@ -1,34 +1,12 @@
 extensions:
     flagbit-product-model-edit-form-clone-button:
-        module: flagbit/product-model-edit-form/clone
+        module: flagbit/product-edit-form/clone
         parent: pim-product-model-edit-form-secondary-actions
         targetZone: secondary-actions
         aclResourceId: pim_enrich_product_model_remove
         position: 90
         config:
-            formName: flagbit-product-model-edit-form-clone-modal
-
-    flagbit-product-model-edit-form-clone-modal:
-        module: flagbit/product-model-edit-form/clone-modal
-        parent: pim/form/common/creation/modal
-        config:
-            labels:
-                title: flagbit.confirmation.clone.product_model
-                subTitle: pim_menu.item.product_model
-                content: confirmation.clone.product_model
-            picture: illustrations/Product-model.svg
-            successMessage: flagbit.entity.product_model.info.create_successful
-            postUrl: flagbit_product_cloner_product_model_clone
-            editRoute: pim_enrich_product_index
-
-    flagbit-product-model-edit-form-create-sku:
-        module: pim/form/common/creation/field
-        parent: flagbit-product-model-edit-form-clone-modal
-        targetZone: fields
-        position: 10
-        config:
-            identifier: code
-        label: pim_enrich.entity.create_popin.code
+            formName: flagbit-product-edit-form-clone-modal
 
     flagbit-product-edit-form-clone-button:
         module: flagbit/product-edit-form/clone
@@ -47,10 +25,14 @@ extensions:
                 subTitle: pim_menu.item.product
                 content: confirmation.clone.product
             successMessage: flagbit.entity.product.info.create_successful
-            postUrl: flagbit_product_cloner_product_clone
-            editRoute: pim_enrich_product_index
+            postProductRoute: flagbit_product_cloner_product_clone
+            postProductModelRoute: flagbit_product_cloner_product_model_clone
+            editProductRoute: pim_enrich_product_index
             variantFormName: flagbit-product-edit-form-fields-container
             productFormName: flagbit-product-edit-form-create-sku
+            excludedProperties:
+                - type
+            editRoute: pim_enrich_product_index
 
     flagbit-product-edit-form-fields-container:
         module: pim/product-model-edit-form/add-child-form-fields-container
@@ -68,5 +50,5 @@ extensions:
         module: pim/form/common/creation/field
         targetZone: fields-container
         config:
-            identifier: identifier
+            identifier: code
         label: pim_enrich.entity.create_popin.code

@@ -71,6 +71,9 @@ After clicking on **clone** you will see this **dialog**:
 
 Put in a new **product code** and click on **save**. After that check if all the data is correct for the new product.
 
+## Known Issues ##
+* A product that contains values in unique attributes except of its identifier, can not be cloned
+
 ## License ##
 
 The TableAttributeBundle is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

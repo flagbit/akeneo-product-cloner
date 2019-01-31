@@ -141,7 +141,7 @@ define(
                 }
 
                 return $.ajax({
-                    url: Routing.generate(this.config.postUrl),
+                    url: Routing.generate(this.getPostRoute()),
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).fail(function (response) {
@@ -151,6 +151,13 @@ define(
                     }
                 }.bind(this))
                     .always(() => loadingMask.remove());
+            },
+            getPostRoute() {
+                if (this.getFormData().type === 'model') {
+                    return this.config.postProductModelRoute;
+                } else {
+                    return this.config.postProductRoute;
+                }
             }
         });
     }

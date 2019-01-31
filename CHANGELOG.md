@@ -3,3 +3,11 @@
 ## Functionalities ##
 
 * Clone product model
+
+
+# 1.1.0 #
+
+## Functionalities ##
+
+* Clone products and variation products
+

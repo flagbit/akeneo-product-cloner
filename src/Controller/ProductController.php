@@ -6,23 +6,21 @@ use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Pim\Bundle\UserBundle\Context\UserContext;
-use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Builder\ProductBuilderInterface;
 use Pim\Component\Catalog\Comparator\Filter\FilterInterface;
 use Pim\Component\Catalog\Localization\Localizer\AttributeConverterInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
 use Pim\Component\Enrich\Converter\ConverterInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProductController extends Controller
+class ProductController extends AbstractController
 {
-
     /**
      * @var ProductRepositoryInterface
      */
@@ -123,8 +121,8 @@ class ProductController extends Controller
         }
 
         // check whether product to be cloned is found otherwise not found HTTP
-        $productModel = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
-        if (null === $productModel) {
+        $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
+        if (null === $product) {
             return new JsonResponse(
                 sprintf('Product model with code %s could not be found.', $data['code_to_clone']),
                 Response::HTTP_NOT_FOUND
@@ -132,19 +130,21 @@ class ProductController extends Controller
         }
         unset($data['code_to_clone']);
         if (isset($data['parent'])) {
+            // TODO: remove this as soon as support of 2.1 is dropped
             $cloneProduct = $this->variantProductBuilder->createProduct();
         } else {
             $cloneProduct = $this->productBuilder->createProduct(
-                $data['identifier']
+                $data['code']
             );
+            unset($data['code']);
         }
 
         // clone product using Akeneo normalizer
-        $normalizedProduct = $this->normalizer->normalize($productModel, 'standard');
+        $normalizedProduct = $this->normalizeProduct($product);
 
         $normalizedProduct = $this->removeIdentifierAttributeValue($normalizedProduct);
         $this->productUpdater->update($cloneProduct, $normalizedProduct);
-        if (isset($data['values'])) {
+        if (!empty($data['values'])) {
             $this->updateProduct($cloneProduct, $data);
         }
         // validate product model clone and return violations if found
@@ -201,5 +201,10 @@ class ProductController extends Controller
         }
 
         $this->productUpdater->update($product, $data);
+    }
+
+    protected function getNormalizer(): NormalizerInterface
+    {
+        return $this->normalizer;
     }
 }
