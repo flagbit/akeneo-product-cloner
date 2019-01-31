@@ -117,7 +117,6 @@ class ProductModelController extends AbstractController
         if (count($violations) > 0) {
             $normalizedViolations = [];
             foreach ($violations as $violation) {
-
                 $violation = $this->violationNormalizer->normalize(
                     $violation,
                     'internal_api',
