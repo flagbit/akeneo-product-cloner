@@ -22,7 +22,6 @@ class LegacyServicePass implements CompilerPassInterface
                     $productControllerService->setArgument($key, new Reference('pim_catalog.builder.product'));
                 }
             }
-
         }
     }
 }
