@@ -6,6 +6,7 @@ use Akeneo\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\ProductModelRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,20 +50,26 @@ class ProductModelController extends AbstractController
      * @var NormalizerInterface
      */
     private $violationNormalizer;
+    /**
+     * @var AttributeRepositoryInterface
+     */
+    private $attributeRepository;
 
     /**
      * DefaultController constructor.
      *
      * @param ProductModelRepositoryInterface $productModelRepository
-     * @param NormalizerInterface             $normalizer
-     * @param SimpleFactoryInterface          $productModelFactory
-     * @param ObjectUpdaterInterface          $productModelUpdater
-     * @param SaverInterface                  $productModelSaver
-     * @param ValidatorInterface              $validator
-     * @param NormalizerInterface             $violiationNormalizer
+     * @param NormalizerInterface $normalizer
+     * @param SimpleFactoryInterface $productModelFactory
+     * @param ObjectUpdaterInterface $productModelUpdater
+     * @param SaverInterface $productModelSaver
+     * @param ValidatorInterface $validator
+     * @param NormalizerInterface $violiationNormalizer
+     * @param AttributeRepositoryInterface $attributeRepository
      */
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
+        AttributeRepositoryInterface $attributeRepository,
         NormalizerInterface $normalizer,
         SimpleFactoryInterface $productModelFactory,
         ObjectUpdaterInterface $productModelUpdater,
@@ -77,6 +84,7 @@ class ProductModelController extends AbstractController
         $this->productModelSaver = $productModelSaver;
         $this->validator = $validator;
         $this->violationNormalizer = $violiationNormalizer;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -136,5 +144,10 @@ class ProductModelController extends AbstractController
     protected function getNormalizer(): NormalizerInterface
     {
         return $this->normalizer;
+    }
+
+    protected function getAttributeRepository(): AttributeRepositoryInterface
+    {
+        return $this->attributeRepository;
     }
 }

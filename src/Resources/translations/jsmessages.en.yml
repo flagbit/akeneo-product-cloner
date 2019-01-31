@@ -1,8 +1,5 @@
 flagbit:
   entity:
-    product_model:
-      info:
-        create_successful: Product model successfully cloned
     product:
       btn:
         clone: Clone
@@ -10,11 +7,4 @@ flagbit:
         create_successful: Product successfully cloned
   confirmation:
     clone:
-      product_model: Clone product model
       product: Clone product
-
-# Grid action messages
-confirmation:
-  clone:
-    product_model:  All product model information will be cloned into a new product model.
-    product:  All product information will be cloned into a new product.

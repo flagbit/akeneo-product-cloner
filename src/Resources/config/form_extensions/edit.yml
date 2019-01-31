@@ -51,4 +51,4 @@ extensions:
         targetZone: fields-container
         config:
             identifier: code
-        label: pim_enrich.entity.create_popin.code
+            label: pim_enrich.entity.create_popin.code

@@ -207,4 +207,9 @@ class ProductController extends AbstractController
     {
         return $this->normalizer;
     }
+
+    protected function getAttributeRepository(): AttributeRepositoryInterface
+    {
+        return $this->attributeRepository;
+    }
 }
