@@ -6,26 +6,49 @@ extensions:
         aclResourceId: pim_enrich_product_model_remove
         position: 90
         config:
-            formName: flagbit-product-model-edit-form-clone-modal
+            formName: flagbit-product-edit-form-clone-modal
 
-    flagbit-product-model-edit-form-clone-modal:
-        module: flagbit/product-edit-form/clone-modal
-        parent: pim/form/common/creation/modal
+    flagbit-product-edit-form-clone-button:
+        module: flagbit/product-edit-form/clone
+        parent: pim-product-edit-form-secondary-actions
+        targetZone: secondary-actions
+        aclResourceId: pim_enrich_product_model_remove
+        position: 90
         config:
-           labels:
-               title: flagbit.confirmation.clone.product_model
-               subTitle: pim_menu.item.product_model
-               content: confirmation.clone.product_model
-           picture: illustrations/Product-model.svg
-           successMessage: flagbit.entity.product_model.info.create_successful
-           postUrl: flagbit_product_cloner_product_model_clone
-           editRoute: pim_enrich_product_index
+            formName: flagbit-product-edit-form-clone-modal
 
-    flagbit-product-model-edit-form-create-sku:
+    flagbit-product-edit-form-clone-modal:
+        module: flagbit/product-edit-form/clone-modal
+        config:
+            labels:
+                title: flagbit.confirmation.clone.product
+                subTitle: pim_menu.item.product
+                content: confirmation.clone.product
+            successMessage: flagbit.entity.product.info.create_successful
+            postProductRoute: flagbit_product_cloner_product_clone
+            postProductModelRoute: flagbit_product_cloner_product_model_clone
+            editProductRoute: pim_enrich_product_index
+            variantFormName: flagbit-product-edit-form-fields-container
+            productFormName: flagbit-product-edit-form-create-sku
+            excludedProperties:
+                - type
+            editRoute: pim_enrich_product_index
+
+    flagbit-product-edit-form-fields-container:
+        module: pim/product-model-edit-form/add-child-form-fields-container
+        targetZone: fields-container
+        config:
+            fieldModules:
+                akeneo-simple-select-field: pim-product-model-add-child-field-simple-select
+                akeneo-metric-field: pim-product-model-add-child-field-metric
+                akeneo-switch-field: pim-product-model-add-child-field-switch
+                akeneo-simple-select-reference-data-field: pim-product-model-add-child-field-simple-select-reference-data
+                akeneo-text-field: pim-product-model-add-child-field-text
+            codeFieldModule: pim-product-model-add-child-field-code
+
+    flagbit-product-edit-form-create-sku:
         module: pim/form/common/creation/field
-        parent: flagbit-product-model-edit-form-clone-modal
-        targetZone: fields
-        position: 10
+        targetZone: fields-container
         config:
             identifier: code
             label: pim_enrich.entity.create_popin.code

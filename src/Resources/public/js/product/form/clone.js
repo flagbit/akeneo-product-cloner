@@ -4,40 +4,51 @@
  * Clone product extension
  */
 define([
+    'jquery',
     'pim/form',
     'underscore',
     'oro/translator',
     'backbone',
     'pim/form-builder',
     'flagbit/template/product/clone-button',
-    'flagbit/template/product/clone-modal',
     ],
     function (
+        $,
         BaseForm,
         _,
         __,
         Backbone,
         FormBuilder,
-        template,
-        templateModal
+        template
     ) {
         return BaseForm.extend({
             template: _.template(template),
-            templateModal: _.template(templateModal),
-
-            events: {
-                'click .clone-product-model-button': 'openModal'
-            },
 
             initialize(config) {
                 this.config = config.config;
-
                 BaseForm.prototype.initialize.apply(this, arguments);
             },
 
             openModal() {
                 return FormBuilder.build(this.config.formName).then(modal => {
-                    modal.setData('code_to_clone', this.getRoot().model.get('code'));
+
+                    const rootModel = this.getRoot().model;
+                    var productType, codeToClone;
+                    if (rootModel.has('identifier')) {
+                        productType = 'product';
+                        codeToClone = rootModel.get('identifier')
+                    } else {
+                        productType = 'model';
+                        codeToClone = rootModel.get('code')
+                    }
+
+                    const initialModalState = {
+                        parent: rootModel.get('parent'),
+                        values: {},
+                        code_to_clone: codeToClone,
+                        type: productType
+                    };
+                    modal.setData(initialModalState);
                     modal.open();
                 });
             },
@@ -59,6 +70,9 @@ define([
 
                 this.$el.html(this.template());
 
+                $('.clone-product-button').on('click', () => {
+                    this.openModal();
+                });
                 return this;
             }
         });

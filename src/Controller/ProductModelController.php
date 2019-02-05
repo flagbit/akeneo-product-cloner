@@ -6,15 +6,15 @@ use Akeneo\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\ProductModelRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProductModelController extends Controller
+class ProductModelController extends AbstractController
 {
     /**
      * @var ProductModelRepositoryInterface
@@ -50,20 +50,26 @@ class ProductModelController extends Controller
      * @var NormalizerInterface
      */
     private $violationNormalizer;
+    /**
+     * @var AttributeRepositoryInterface
+     */
+    private $attributeRepository;
 
     /**
      * DefaultController constructor.
      *
      * @param ProductModelRepositoryInterface $productModelRepository
-     * @param NormalizerInterface             $normalizer
-     * @param SimpleFactoryInterface          $productModelFactory
-     * @param ObjectUpdaterInterface          $productModelUpdater
-     * @param SaverInterface                  $productModelSaver
-     * @param ValidatorInterface              $validator
-     * @param NormalizerInterface             $violiationNormalizer
+     * @param NormalizerInterface $normalizer
+     * @param SimpleFactoryInterface $productModelFactory
+     * @param ObjectUpdaterInterface $productModelUpdater
+     * @param SaverInterface $productModelSaver
+     * @param ValidatorInterface $validator
+     * @param NormalizerInterface $violiationNormalizer
+     * @param AttributeRepositoryInterface $attributeRepository
      */
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
+        AttributeRepositoryInterface $attributeRepository,
         NormalizerInterface $normalizer,
         SimpleFactoryInterface $productModelFactory,
         ObjectUpdaterInterface $productModelUpdater,
@@ -78,6 +84,7 @@ class ProductModelController extends Controller
         $this->productModelSaver = $productModelSaver;
         $this->validator = $validator;
         $this->violationNormalizer = $violiationNormalizer;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -104,16 +111,15 @@ class ProductModelController extends Controller
                 Response::HTTP_NOT_FOUND
             );
         }
-
+        unset($content['code_to_clone']);
         // create a new product model
         $cloneProductModel = $this->productModelFactory->create();
 
         // clone product using Akeneo normalizer and updater for reusing code
-        $normalizedProduct = $this->normalizer->normalize($productModel, 'standard');
+        $normalizedProduct = $this->normalizeProduct($productModel);
         $this->productModelUpdater->update($cloneProductModel, $normalizedProduct);
-        // set the new product model identifier 'code'
-        $cloneProductModel->setCode(isset($content['code']) ? $content['code'] : '');
-
+        $this->productModelUpdater->update($cloneProductModel, $content);
+        $cloneProductModel->setCode($content['code']);
         // validate product model clone and return violations if found
         $violations = $this->validator->validate($cloneProductModel);
         if (count($violations) > 0) {
@@ -133,5 +139,15 @@ class ProductModelController extends Controller
         $this->productModelSaver->save($cloneProductModel);
 
         return new JsonResponse();
+    }
+
+    protected function getNormalizer(): NormalizerInterface
+    {
+        return $this->normalizer;
+    }
+
+    protected function getAttributeRepository(): AttributeRepositoryInterface
+    {
+        return $this->attributeRepository;
     }
 }
