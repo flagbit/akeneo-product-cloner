@@ -2,8 +2,8 @@
 
 namespace Flagbit\Bundle\ProductClonerBundle\Controller;
 
-use Pim\Component\Catalog\Model\EntityWithFamilyVariantInterface;
-use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface;
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
