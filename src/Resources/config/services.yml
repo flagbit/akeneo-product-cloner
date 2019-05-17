@@ -25,7 +25,4 @@ services:
             - '@pim_catalog.comparator.filter.product'
             - '@pim_enrich.converter.enrich_to_standard.product_value'
             - '@pim_enrich.normalizer.product_violation'
-            - '@pim_catalog.builder.variant_product'
-#the argument @pim_catalog.builder.variant_product is changed to @pim_catalog.builder.product
-#via compiler pass as the service is removed since 2.2
-#TODO: remove this manipulation when the support for 2.1 is dropped
+            - '@pim_catalog.builder.product'
