@@ -115,57 +115,69 @@ class ProductController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        // check 'code_to_clone' is provided otherwise HTTP bad request
-        if (false === isset($data['code_to_clone'])) {
-            return new JsonResponse('Field "code_to_clone" is missing.', Response::HTTP_BAD_REQUEST);
-        }
+        try {
 
-        // check whether product to be cloned is found otherwise not found HTTP
-        $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
-        if (null === $product) {
-            return new JsonResponse(
-                sprintf('Product model with code %s could not be found.', $data['code_to_clone']),
-                Response::HTTP_NOT_FOUND
-            );
-        }
-        unset($data['code_to_clone']);
-        if (isset($data['parent'])) {
-            // TODO: remove this as soon as support of 2.1 is dropped
-            $cloneProduct = $this->variantProductBuilder->createProduct();
-        } else {
-            $cloneProduct = $this->productBuilder->createProduct(
-                $data['code']
-            );
-            unset($data['code']);
-        }
-
-        // clone product using Akeneo normalizer
-        $normalizedProduct = $this->normalizeProduct($product);
-
-        $normalizedProduct = $this->removeIdentifierAttributeValue($normalizedProduct);
-        $this->productUpdater->update($cloneProduct, $normalizedProduct);
-        if (!empty($data['values'])) {
-            $this->updateProduct($cloneProduct, $data);
-        }
-        // validate product model clone and return violations if found
-        $violations = $this->validator->validate($cloneProduct);
-        if (count($violations) > 0) {
-            $normalizedViolations = [];
-            foreach ($violations as $violation) {
-                $violation = $this->constraintViolationNormalizer->normalize(
-                    $violation,
-                    'internal_api',
-                    ['product' => $cloneProduct]
+            // check 'code_to_clone' is provided otherwise HTTP bad request
+            if (false === isset($data['code_to_clone'])) {
+                return new JsonResponse(['values' => [['message' => 'Field "code_to_clone" is missing.']]], Response::HTTP_BAD_REQUEST);
+            }
+            // check whether product to be cloned is found otherwise not found HTTP
+            $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
+            if (null === $product) {
+                return new JsonResponse(
+                    ['values' => [['message' => sprintf('Product model with code %s could not be found.', $data['code_to_clone'])]]],
+                    Response::HTTP_NOT_FOUND
                 );
-                $normalizedViolations[] = $violation;
+            }
+            unset($data['code_to_clone']);
+            if (isset($data['parent'])) {
+                // TODO: remove this as soon as support of 2.1 is dropped
+                $cloneProduct = $this->variantProductBuilder->createProduct();
+            } else {
+
+                // check 'code' is provided otherwise HTTP bad request
+                if (false === isset($data['code'])) {
+                    return new JsonResponse(['values' => [['message' => 'Failed "Code" is missing.']]], Response::HTTP_BAD_REQUEST);
+                }
+
+                $cloneProduct = $this->productBuilder->createProduct(
+                    $data['code']
+                );
+                unset($data['code']);
             }
 
-            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+            // clone product using Akeneo normalizer
+            $normalizedProduct = $this->normalizeProduct($product);
+
+            $normalizedProduct = $this->removeIdentifierAttributeValue($normalizedProduct);
+            $this->productUpdater->update($cloneProduct, $normalizedProduct);
+            if (!empty($data['values'])) {
+                $this->updateProduct($cloneProduct, $data);
+            }
+            // validate product model clone and return violations if found
+            $violations = $this->validator->validate($cloneProduct);
+            if (count($violations) > 0) {
+                $normalizedViolations = [];
+                foreach ($violations as $violation) {
+                    $violation = $this->constraintViolationNormalizer->normalize(
+                        $violation,
+                        'internal_api',
+                        ['product' => $cloneProduct]
+                    );
+                    $normalizedViolations[] = $violation;
+                }
+
+                return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+            }
+
+            $this->productSaver->save($cloneProduct);
+
+            return new JsonResponse('Success.');
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['values' => [['message' => 'Failed.']]], $e->getMessage());
         }
 
-        $this->productSaver->save($cloneProduct);
-
-        return new JsonResponse();
     }
 
     private function removeIdentifierAttributeValue(array $data): array

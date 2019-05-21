@@ -98,16 +98,22 @@ class ProductModelController extends AbstractController
     {
         $content = json_decode($request->getContent(), true);
 
-        // check 'code_to_clone' is provided otherwise HTTP bad request
+        try {
+            // check 'code_to_clone' is provided otherwise HTTP bad request
         if (false === isset($content['code_to_clone'])) {
-            return new JsonResponse('Field "code_to_clone" is missing.', Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['values' => [['message' => 'Field "code_to_clone" is missing.']]], Response::HTTP_BAD_REQUEST);
+        }
+
+        // check 'code' is provided otherwise HTTP bad request
+        if (false === isset($content['code'])) {
+            return new JsonResponse(['values' => [['message' => 'Failed "Code" is missing.']]], Response::HTTP_BAD_REQUEST);
         }
 
         // check whether product to be cloned is found otherwise not found HTTP
         $productModel = $this->productModelRepository->findOneByIdentifier($content['code_to_clone']);
         if (null === $productModel) {
             return new JsonResponse(
-                sprintf('Product model with code %s could not be found.', $content['code_to_clone']),
+                ['values' => [['message' => sprintf('Product model with code %s could not be found.', $content['code_to_clone'])]]],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -139,6 +145,10 @@ class ProductModelController extends AbstractController
         $this->productModelSaver->save($cloneProductModel);
 
         return new JsonResponse();
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['values' => [['message' => $e->getMessage()]]], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     protected function getNormalizer(): NormalizerInterface
