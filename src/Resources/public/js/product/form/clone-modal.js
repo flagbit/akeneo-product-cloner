@@ -84,8 +84,8 @@ define(
                 const deferred = $.Deferred();
                 const modal = new Backbone.BootstrapModal({
                     content: '',
-                    cancelText: __('pim_enrich.entity.create_popin.labels.cancel'),
-                    okText: __('pim_enrich.entity.create_popin.labels.save'),
+                    cancelText: __('pim_common.cancel'),
+                    okText: __('pim_common.save'),
                     okCloses: false
                 });
 
@@ -140,13 +140,15 @@ define(
                     data = _.omit(data, this.config.excludedProperties)
                 }
 
+                var that = this;
+
                 return $.ajax({
                     url: Routing.generate(this.getPostRoute()),
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).fail(function (response) {
                     if (response.responseJSON) {
-                        this.globalErrors = response.responseJSON.values;
+                        that.globalErrors = response.responseJSON.values;
                         this.render();
                     }
                 }.bind(this))
