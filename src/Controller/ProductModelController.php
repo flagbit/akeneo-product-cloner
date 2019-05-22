@@ -114,7 +114,10 @@ class ProductModelController extends AbstractController
             // check whether product to be cloned is found otherwise not found HTTP
             $productModel = $this->productModelRepository->findOneByIdentifier($content['code_to_clone']);
             if (null === $productModel) {
-                $message = [['message' => sprintf('Product model with code %s could not be found.', $content['code_to_clone'])]];
+                $message = [['message' => sprintf(
+                    'Product model with code %s could not be found.',
+                    $content['code_to_clone']
+                )]];
                 return new JsonResponse(
                     ['values' => $message],
                     Response::HTTP_NOT_FOUND
@@ -141,12 +144,10 @@ class ProductModelController extends AbstractController
                     );
                     $normalizedViolations[] = $violation;
                 }
-
                 return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
             }
             $this->productModelSaver->save($cloneProductModel);
             return new JsonResponse();
-
         } catch (\Exception $e) {
             return new JsonResponse(['values' => [['message' => $e->getMessage()]]], Response::HTTP_BAD_REQUEST);
         }
