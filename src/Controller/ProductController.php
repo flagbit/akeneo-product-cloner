@@ -116,18 +116,20 @@ class ProductController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         try {
-
             // check 'code_to_clone' is provided otherwise HTTP bad request
             if (false === isset($data['code_to_clone'])) {
-                $message = [['message' => 'Field "code_to_clone" is missing.']]
+                $message = [['message' => 'Field "code_to_clone" is missing.']];
                 return new JsonResponse(['values' => $message], Response::HTTP_BAD_REQUEST);
             }
             // check whether product to be cloned is found otherwise not found HTTP
             $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
             if (null === $product) {
-                $message = [['message' => sprintf('Product model with code %s could not be found.', $data['code_to_clone'])]];
+                $message = [['message' => sprintf(
+                    'Product model with code %s could not be found.', $data['code_to_clone']
+                )]];
                 return new JsonResponse(
-                    ['values' => $message], Response::HTTP_NOT_FOUND
+                    ['values' => $message],
+                    Response::HTTP_NOT_FOUND
                 );
             }
             unset($data['code_to_clone']);
@@ -171,14 +173,10 @@ class ProductController extends AbstractController
                 return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
             }
             $this->productSaver->save($cloneProduct);
-
             return new JsonResponse('Success.');
-
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return new JsonResponse(['values' => [['message' => 'Failed.']]], $e->getMessage());
         }
-
     }
 
     private function removeIdentifierAttributeValue(array $data) : array
