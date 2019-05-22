@@ -104,6 +104,7 @@ class ProductController extends AbstractController
         $this->variantProductBuilder = $variantProductBuilder;
         $this->attributeRepository = $attributeRepository;
     }
+
     /**
      * @param Request $request
      *
@@ -114,19 +115,19 @@ class ProductController extends AbstractController
     public function cloneAction(Request $request) : JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
         try {
 
             // check 'code_to_clone' is provided otherwise HTTP bad request
             if (false === isset($data['code_to_clone'])) {
-                return new JsonResponse(['values' => [['message' => 'Field "code_to_clone" is missing.']]], Response::HTTP_BAD_REQUEST);
+                $message = [['message' => 'Field "code_to_clone" is missing.']]
+                return new JsonResponse(['values' => $message], Response::HTTP_BAD_REQUEST);
             }
             // check whether product to be cloned is found otherwise not found HTTP
             $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
             if (null === $product) {
+                $message = [['message' => sprintf('Product model with code %s could not be found.', $data['code_to_clone'])]];
                 return new JsonResponse(
-                    ['values' => [['message' => sprintf('Product model with code %s could not be found.', $data['code_to_clone'])]]],
-                    Response::HTTP_NOT_FOUND
+                    ['values' => $message], Response::HTTP_NOT_FOUND
                 );
             }
             unset($data['code_to_clone']);
@@ -134,10 +135,10 @@ class ProductController extends AbstractController
                 // TODO: remove this as soon as support of 2.1 is dropped
                 $cloneProduct = $this->variantProductBuilder->createProduct();
             } else {
-
                 // check 'code' is provided otherwise HTTP bad request
                 if (false === isset($data['code'])) {
-                    return new JsonResponse(['values' => [['message' => 'Failed "Code" is missing.']]], Response::HTTP_BAD_REQUEST);
+                    $message = [['message' => 'Failed "Code" is missing.']];
+                    return new JsonResponse(['values' => $message], Response::HTTP_BAD_REQUEST);
                 }
 
                 $cloneProduct = $this->productBuilder->createProduct(
@@ -169,18 +170,18 @@ class ProductController extends AbstractController
 
                 return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
             }
-
             $this->productSaver->save($cloneProduct);
 
             return new JsonResponse('Success.');
 
-        } catch (\Exception $e) {
+        } catch (\Exception $e)
+        {
             return new JsonResponse(['values' => [['message' => 'Failed.']]], $e->getMessage());
         }
 
     }
 
-    private function removeIdentifierAttributeValue(array $data): array
+    private function removeIdentifierAttributeValue(array $data) : array
     {
         unset($data['identifier']);
         $identifierAttributeCode = $this->attributeRepository->getIdentifier()->getCode();
@@ -190,6 +191,7 @@ class ProductController extends AbstractController
         }
         return $data;
     }
+
     /**
      * Updates product with the provided request data
      *
@@ -201,7 +203,7 @@ class ProductController extends AbstractController
         $values = $this->productValueConverter->convert($data['values']);
 
         $values = $this->localizedConverter->convertToDefaultFormats($values, [
-            'locale' => $this->userContext->getUiLocale()->getCode()
+            'locale' => $this->userContext->getUiLocale()->getCode(),
         ]);
 
         $dataFiltered = $this->emptyValuesFilter->filter($product, ['values' => $values]);
@@ -215,12 +217,12 @@ class ProductController extends AbstractController
         $this->productUpdater->update($product, $data);
     }
 
-    protected function getNormalizer(): NormalizerInterface
+    protected function getNormalizer() : NormalizerInterface
     {
         return $this->normalizer;
     }
 
-    protected function getAttributeRepository(): AttributeRepositoryInterface
+    protected function getAttributeRepository() : AttributeRepositoryInterface
     {
         return $this->attributeRepository;
     }
