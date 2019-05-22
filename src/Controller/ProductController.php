@@ -125,7 +125,8 @@ class ProductController extends AbstractController
             $product = $this->productRepository->findOneByIdentifier($data['code_to_clone']);
             if (null === $product) {
                 $message = [['message' => sprintf(
-                    'Product model with code %s could not be found.', $data['code_to_clone']
+                    'Product model with code %s could not be found.',
+                    $data['code_to_clone']
                 )]];
                 return new JsonResponse(
                     ['values' => $message],
