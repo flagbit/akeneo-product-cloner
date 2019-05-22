@@ -10,8 +10,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 abstract class AbstractController extends Controller
 {
 
-    abstract protected function getNormalizer(): NormalizerInterface;
-    abstract protected function getAttributeRepository(): AttributeRepositoryInterface;
+    abstract protected function getNormalizer() : NormalizerInterface;
+
+    abstract protected function getAttributeRepository() : AttributeRepositoryInterface;
 
     protected function normalizeProduct(EntityWithFamilyVariantInterface $product)
     {
@@ -30,9 +31,9 @@ abstract class AbstractController extends Controller
             unset($normalizedProduct['values'][$attributeCode]);
         }
         unset($normalizedProduct['identifier']);
-        if(empty((array) $normalizedProduct['associations'])){
+        if (empty((array)$normalizedProduct['associations'])) {
             unset($normalizedProduct['associations']);
-        };
+        }
 
         return $normalizedProduct;
     }
