@@ -22,7 +22,8 @@ extensions:
         config:
             labels:
                 title: flagbit.confirmation.clone.product
-                subTitle: pim_menu.item.product_model
+                subTitle: pim_enrich.entity.product.label
+                subTitleModel: pim_menu.item.product_model
                 content: confirmation.clone.product
             successMessage: flagbit.entity.product.info.create_successful
             postProductRoute: flagbit_product_cloner_product_clone
