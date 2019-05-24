@@ -51,9 +51,11 @@ define(
             },
 
             render() {
+
+
                 this.$el.html(this.template({
                     modalTitle: __(this.config.labels.title),
-                    subTitle: __(this.config.labels.subTitle),
+                    subTitle: __(this.getSubtitle()),
                     content: __(this.config.labels.content),
                     picture: this.config.picture,
                     errors: this.globalErrors
@@ -72,6 +74,28 @@ define(
                 });
             },
 
+            getIllustrationClass() {
+                if (this.getProductType() == 'model') {
+                    return 'product-model';
+                }
+                else {
+                    return 'products';
+                }
+            },
+
+            getSubtitle() {
+                if (this.getProductType() == 'model') {
+                    return this.config.labels.subTitleModel;
+                }
+                else {
+                    return this.config.labels.subTitle;
+                }
+            },
+
+            getProductType() {
+                return this.getRoot().model.get('type');
+            },
+
             /**
              * Opens the modal then instantiates the creation form inside it.
              * This function returns a rejected promise when the popin
@@ -86,7 +110,8 @@ define(
                     content: '',
                     cancelText: __('pim_common.cancel'),
                     okText: __('pim_common.save'),
-                    okCloses: false
+                    okCloses: false,
+                    illustrationClass: this.getIllustrationClass()
                 });
 
                 modal.open();
