@@ -1,13 +1,13 @@
-# 1.0.0 #
+# Changelog
 
-## Functionalities ##
+## 3.0.0
 
-* Clone product model
+* Add support for Akeneo 3.0 (LTS)
 
-
-# 1.1.0 #
-
-## Functionalities ##
+## 1.1.0
 
 * Clone products and variation products
 
+## 1.0.0
+
+* Clone product model
