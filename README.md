@@ -53,7 +53,7 @@ flagbit_product_cloner:
 Clear the cache:
 
 ``` bash
-php bin/console --e=prod cache:clear
+php bin/console cache:clear --env=prod
 ```
 
 Build and install the new front-end dependencies (new translations, etc.)
