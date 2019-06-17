@@ -1,0 +1,10 @@
+flagbit:
+  entity:
+    product:
+      btn:
+        clone: Cloner
+      info:
+        create_successful: Produit cloné avec succès
+  confirmation:
+    clone:
+      product: Cloner produit
