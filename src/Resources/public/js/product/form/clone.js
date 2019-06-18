@@ -67,7 +67,6 @@ define([
                 if (!this.getFormData().meta) {
                     return;
                 }
-
                 this.$el.html(this.template());
 
                 $('.clone-product-button').on('click', () => {

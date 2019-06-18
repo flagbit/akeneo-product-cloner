@@ -2,12 +2,12 @@
 
 namespace Flagbit\Bundle\ProductClonerBundle\Controller;
 
-use Akeneo\Component\StorageUtils\Factory\SimpleFactoryInterface;
-use Akeneo\Component\StorageUtils\Saver\SaverInterface;
-use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
+use Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactoryInterface;
+use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
+use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
-use Pim\Component\Catalog\Repository\ProductModelRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductModelRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,13 +59,13 @@ class ProductModelController extends AbstractController
      * DefaultController constructor.
      *
      * @param ProductModelRepositoryInterface $productModelRepository
-     * @param NormalizerInterface $normalizer
-     * @param SimpleFactoryInterface $productModelFactory
-     * @param ObjectUpdaterInterface $productModelUpdater
-     * @param SaverInterface $productModelSaver
-     * @param ValidatorInterface $validator
-     * @param NormalizerInterface $violiationNormalizer
-     * @param AttributeRepositoryInterface $attributeRepository
+     * @param NormalizerInterface             $normalizer
+     * @param SimpleFactoryInterface          $productModelFactory
+     * @param ObjectUpdaterInterface          $productModelUpdater
+     * @param SaverInterface                  $productModelSaver
+     * @param ValidatorInterface              $validator
+     * @param NormalizerInterface             $violiationNormalizer
+     * @param AttributeRepositoryInterface    $attributeRepository
      */
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
@@ -98,55 +98,67 @@ class ProductModelController extends AbstractController
     {
         $content = json_decode($request->getContent(), true);
 
-        // check 'code_to_clone' is provided otherwise HTTP bad request
-        if (false === isset($content['code_to_clone'])) {
-            return new JsonResponse('Field "code_to_clone" is missing.', Response::HTTP_BAD_REQUEST);
-        }
-
-        // check whether product to be cloned is found otherwise not found HTTP
-        $productModel = $this->productModelRepository->findOneByIdentifier($content['code_to_clone']);
-        if (null === $productModel) {
-            return new JsonResponse(
-                sprintf('Product model with code %s could not be found.', $content['code_to_clone']),
-                Response::HTTP_NOT_FOUND
-            );
-        }
-        unset($content['code_to_clone']);
-        // create a new product model
-        $cloneProductModel = $this->productModelFactory->create();
-
-        // clone product using Akeneo normalizer and updater for reusing code
-        $normalizedProduct = $this->normalizeProduct($productModel);
-        $this->productModelUpdater->update($cloneProductModel, $normalizedProduct);
-        $this->productModelUpdater->update($cloneProductModel, $content);
-        $cloneProductModel->setCode($content['code']);
-        // validate product model clone and return violations if found
-        $violations = $this->validator->validate($cloneProductModel);
-        if (count($violations) > 0) {
-            $normalizedViolations = [];
-            foreach ($violations as $violation) {
-                $violation = $this->violationNormalizer->normalize(
-                    $violation,
-                    'internal_api',
-                    ['product_model' => $cloneProductModel]
-                );
-                $normalizedViolations[] = $violation;
+        try {
+            // check 'code_to_clone' is provided otherwise HTTP bad request
+            if (false === isset($content['code_to_clone'])) {
+                $message = [['message' => 'Field "code_to_clone" is missing.']];
+                return new JsonResponse(['values' => $message], Response::HTTP_BAD_REQUEST);
             }
 
-            return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+            // check 'code' is provided otherwise HTTP bad request
+            if (false === isset($content['code'])) {
+                $message = [['message' => 'Failed "Code" is missing.']];
+                return new JsonResponse(['values' => $message], Response::HTTP_BAD_REQUEST);
+            }
+
+            // check whether product to be cloned is found otherwise not found HTTP
+            $productModel = $this->productModelRepository->findOneByIdentifier($content['code_to_clone']);
+            if (null === $productModel) {
+                $message = [['message' => sprintf(
+                    'Product model with code %s could not be found.',
+                    $content['code_to_clone']
+                )]];
+                return new JsonResponse(
+                    ['values' => $message],
+                    Response::HTTP_NOT_FOUND
+                );
+            }
+            unset($content['code_to_clone']);
+            // create a new product model
+            $cloneProductModel = $this->productModelFactory->create();
+
+            // clone product using Akeneo normalizer and updater for reusing code
+            $normalizedProduct = $this->normalizeProduct($productModel);
+            $this->productModelUpdater->update($cloneProductModel, $normalizedProduct);
+            $this->productModelUpdater->update($cloneProductModel, $content);
+            $cloneProductModel->setCode($content['code']);
+            // validate product model clone and return violations if found
+            $violations = $this->validator->validate($cloneProductModel);
+            if (count($violations) > 0) {
+                $normalizedViolations = [];
+                foreach ($violations as $violation) {
+                    $violation = $this->violationNormalizer->normalize(
+                        $violation,
+                        'internal_api',
+                        ['product_model' => $cloneProductModel]
+                    );
+                    $normalizedViolations[] = $violation;
+                }
+                return new JsonResponse(['values' => $normalizedViolations], Response::HTTP_BAD_REQUEST);
+            }
+            $this->productModelSaver->save($cloneProductModel);
+            return new JsonResponse();
+        } catch (\Exception $e) {
+            return new JsonResponse(['values' => [['message' => $e->getMessage()]]], Response::HTTP_BAD_REQUEST);
         }
-
-        $this->productModelSaver->save($cloneProductModel);
-
-        return new JsonResponse();
     }
 
-    protected function getNormalizer(): NormalizerInterface
+    protected function getNormalizer() : NormalizerInterface
     {
         return $this->normalizer;
     }
 
-    protected function getAttributeRepository(): AttributeRepositoryInterface
+    protected function getAttributeRepository() : AttributeRepositoryInterface
     {
         return $this->attributeRepository;
     }

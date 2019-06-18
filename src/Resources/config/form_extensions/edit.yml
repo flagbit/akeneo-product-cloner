@@ -22,7 +22,8 @@ extensions:
         config:
             labels:
                 title: flagbit.confirmation.clone.product
-                subTitle: pim_menu.item.product
+                subTitle: pim_enrich.entity.product.label
+                subTitleModel: pim_menu.item.product_model
                 content: confirmation.clone.product
             successMessage: flagbit.entity.product.info.create_successful
             postProductRoute: flagbit_product_cloner_product_clone
@@ -36,7 +37,7 @@ extensions:
 
     flagbit-product-edit-form-fields-container:
         module: pim/product-model-edit-form/add-child-form-fields-container
-        targetZone: fields-container
+        targetZone: fields-containercreation_code
         config:
             fieldModules:
                 akeneo-simple-select-field: pim-product-model-add-child-field-simple-select
@@ -51,4 +52,4 @@ extensions:
         targetZone: fields-container
         config:
             identifier: code
-            label: pim_enrich.entity.create_popin.code
+            label: pim_common.code

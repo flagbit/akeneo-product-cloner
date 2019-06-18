@@ -51,9 +51,11 @@ define(
             },
 
             render() {
+
+
                 this.$el.html(this.template({
                     modalTitle: __(this.config.labels.title),
-                    subTitle: __(this.config.labels.subTitle),
+                    subTitle: __(this.getSubtitle()),
                     content: __(this.config.labels.content),
                     picture: this.config.picture,
                     errors: this.globalErrors
@@ -72,6 +74,28 @@ define(
                 });
             },
 
+            getIllustrationClass() {
+                if (this.getProductType() == 'model') {
+                    return 'product-model';
+                }
+                else {
+                    return 'products';
+                }
+            },
+
+            getSubtitle() {
+                if (this.getProductType() == 'model') {
+                    return this.config.labels.subTitleModel;
+                }
+                else {
+                    return this.config.labels.subTitle;
+                }
+            },
+
+            getProductType() {
+                return this.getRoot().model.get('type');
+            },
+
             /**
              * Opens the modal then instantiates the creation form inside it.
              * This function returns a rejected promise when the popin
@@ -84,9 +108,10 @@ define(
                 const deferred = $.Deferred();
                 const modal = new Backbone.BootstrapModal({
                     content: '',
-                    cancelText: __('pim_enrich.entity.create_popin.labels.cancel'),
-                    okText: __('pim_enrich.entity.create_popin.labels.save'),
-                    okCloses: false
+                    cancelText: __('pim_common.cancel'),
+                    okText: __('pim_common.save'),
+                    okCloses: false,
+                    illustrationClass: this.getIllustrationClass()
                 });
 
                 modal.open();
@@ -140,13 +165,15 @@ define(
                     data = _.omit(data, this.config.excludedProperties)
                 }
 
+                var that = this;
+
                 return $.ajax({
                     url: Routing.generate(this.getPostRoute()),
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).fail(function (response) {
                     if (response.responseJSON) {
-                        this.globalErrors = response.responseJSON.values;
+                        that.globalErrors = response.responseJSON.values;
                         this.render();
                     }
                 }.bind(this))

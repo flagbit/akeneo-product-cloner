@@ -1,6 +1,8 @@
 # Flagbit ProductClonerBundle for Akeneo PIM
 
-[![Build Status](https://img.shields.io/travis/flagbit/akeneo-product-cloner.svg?style=flat-square)](https://travis-ci.org/flagbit/akeneo-product-cloner)
+[![Build Status](https://img.shields.io/travis/flagbit/akeneo-product-cloner/master.svg?style=flat-square)](https://travis-ci.org/flagbit/akeneo-product-cloner?branch=master)
+[![Total Downloads](https://poser.pugx.org/flagbit/product-cloner-bundle/downloads?format=flat-square)](https://packagist.org/packages/flagbit/product-cloner-bundle)
+[![Quality Score](https://img.shields.io/scrutinizer/g/flagbit/akeneo-product-cloner.svg?style=flat-square)](https://scrutinizer-ci.com/g/Flagbit/akeneo-product-cloner)
 [![Packagist Version](https://img.shields.io/packagist/v/flagbit/product-cloner-bundle.svg?style=flat-square)](https://packagist.org/packages/flagbit/product-cloner-bundle)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
@@ -51,7 +53,7 @@ flagbit_product_cloner:
 Clear the cache:
 
 ``` bash
-php bin/console -e=prod cache:clear
+php bin/console cache:clear --env=prod
 ```
 
 Build and install the new front-end dependencies (new translations, etc.)
@@ -70,6 +72,12 @@ After clicking on **clone** you will see this **dialog**:
 ![Product Model Clone Dialog Screen](https://raw.githubusercontent.com/Flagbit/akeneo-product-cloner/master/screens/product_model_clone_dialog.png "Product Model Clone Dialog Screen")
 
 Put in a new **product code** and click on **save**. After that check if all the data is correct for the new product.
+
+## Akeneo Compatibility ##
+
+This extension supports the latest Akeneo PIM CE/EE stable versions:
+
+* 3.0 and 2.3 (LTS)
 
 ## License ##
 
