@@ -25,54 +25,71 @@ class ProductController extends AbstractController
      * @var ProductRepositoryInterface
      */
     private $productRepository;
+
     /**
      * @var ObjectUpdaterInterface
      */
     private $productUpdater;
+
     /**
      * @var SaverInterface
      */
     private $productSaver;
+
     /**
      * @var NormalizerInterface
      */
     private $normalizer;
+
     /**
      * @var ValidatorInterface
      */
     private $validator;
+
     /**
      * @var UserContext
      */
     private $userContext;
+
     /**
      * @var ProductBuilderInterface
      */
     private $productBuilder;
+
     /**
      * @var AttributeConverterInterface
      */
     private $localizedConverter;
+
     /**
      * @var FilterInterface
      */
     private $emptyValuesFilter;
+
     /**
      * @var ConverterInterface
      */
     private $productValueConverter;
+
     /**
      * @var NormalizerInterface
      */
     private $constraintViolationNormalizer;
+
     /**
      * @var ProductBuilderInterface
      */
     private $variantProductBuilder;
+
     /**
      * @var AttributeRepositoryInterface
      */
     private $attributeRepository;
+
+    /**
+     * @var string[]
+     */
+    private $attributeCodeBlacklist;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
@@ -87,7 +104,8 @@ class ProductController extends AbstractController
         FilterInterface $emptyValuesFilter,
         ConverterInterface $productValueConverter,
         NormalizerInterface $constraintViolationNormalizer,
-        ProductBuilderInterface $variantProductBuilder
+        ProductBuilderInterface $variantProductBuilder,
+        array $attributeCodeBlacklist
     ) {
 
         $this->productRepository = $productRepository;
@@ -103,6 +121,7 @@ class ProductController extends AbstractController
         $this->constraintViolationNormalizer = $constraintViolationNormalizer;
         $this->variantProductBuilder = $variantProductBuilder;
         $this->attributeRepository = $attributeRepository;
+        $this->attributeCodeBlacklist = $attributeCodeBlacklist;
     }
 
     /**
@@ -214,6 +233,14 @@ class ProductController extends AbstractController
         }
 
         $this->productUpdater->update($product, $data);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAttributeCodeBlacklist() : array
+    {
+        return $this->attributeCodeBlacklist;
     }
 
     protected function getNormalizer() : NormalizerInterface

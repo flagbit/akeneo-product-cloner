@@ -10,6 +10,7 @@ services:
             - '@pim_catalog.saver.product_model'
             - '@pim_catalog.validator.product'
             - '@pim_enrich.normalizer.violation'
+            - '%flagbit_product_cloner.attribute_blacklist%'
     flagbit_product_cloner.controller.product:
         class: Flagbit\Bundle\ProductClonerBundle\Controller\ProductController
         arguments:
@@ -26,3 +27,4 @@ services:
             - '@pim_enrich.converter.enrich_to_standard.product_value'
             - '@pim_enrich.normalizer.product_violation'
             - '@pim_catalog.builder.product'
+            - '%flagbit_product_cloner.attribute_blacklist%'

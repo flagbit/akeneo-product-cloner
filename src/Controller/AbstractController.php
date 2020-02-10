@@ -14,6 +14,8 @@ abstract class AbstractController extends Controller
 
     abstract protected function getAttributeRepository() : AttributeRepositoryInterface;
 
+    abstract protected function getAttributeCodeBlacklist() : array;
+
     protected function normalizeProduct(EntityWithFamilyVariantInterface $product)
     {
         $normalizedProduct = $this->getNormalizer()->normalize($product, 'external_api');
@@ -25,9 +27,14 @@ abstract class AbstractController extends Controller
                 unset($normalizedProduct['values'][$value->getAttributeCode()]);
             }
             $product = $parent;
-        };
+        }
 
-        foreach ($this->getAttributeRepository()->findUniqueAttributeCodes() as $attributeCode) {
+        $ignoredAttributeCodes = array_merge(
+            $this->getAttributeRepository()->findUniqueAttributeCodes(),
+            $this->getAttributeCodeBlacklist()
+        );
+
+        foreach ($ignoredAttributeCodes as $attributeCode) {
             unset($normalizedProduct['values'][$attributeCode]);
         }
         unset($normalizedProduct['identifier']);

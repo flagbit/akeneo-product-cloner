@@ -50,23 +50,17 @@ class ProductModelController extends AbstractController
      * @var NormalizerInterface
      */
     private $violationNormalizer;
+
     /**
      * @var AttributeRepositoryInterface
      */
     private $attributeRepository;
 
     /**
-     * DefaultController constructor.
-     *
-     * @param ProductModelRepositoryInterface $productModelRepository
-     * @param NormalizerInterface             $normalizer
-     * @param SimpleFactoryInterface          $productModelFactory
-     * @param ObjectUpdaterInterface          $productModelUpdater
-     * @param SaverInterface                  $productModelSaver
-     * @param ValidatorInterface              $validator
-     * @param NormalizerInterface             $violiationNormalizer
-     * @param AttributeRepositoryInterface    $attributeRepository
+     * @var string[]
      */
+    private $attributeCodeBlacklist;
+
     public function __construct(
         ProductModelRepositoryInterface $productModelRepository,
         AttributeRepositoryInterface $attributeRepository,
@@ -75,7 +69,8 @@ class ProductModelController extends AbstractController
         ObjectUpdaterInterface $productModelUpdater,
         SaverInterface $productModelSaver,
         ValidatorInterface $validator,
-        NormalizerInterface $violiationNormalizer
+        NormalizerInterface $violationNormalizer,
+        array $attributeCodeBlacklist
     ) {
         $this->productModelRepository = $productModelRepository;
         $this->normalizer = $normalizer;
@@ -83,8 +78,9 @@ class ProductModelController extends AbstractController
         $this->productModelUpdater = $productModelUpdater;
         $this->productModelSaver = $productModelSaver;
         $this->validator = $validator;
-        $this->violationNormalizer = $violiationNormalizer;
+        $this->violationNormalizer = $violationNormalizer;
         $this->attributeRepository = $attributeRepository;
+        $this->attributeCodeBlacklist = $attributeCodeBlacklist;
     }
 
     /**
@@ -151,6 +147,14 @@ class ProductModelController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(['values' => [['message' => $e->getMessage()]]], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAttributeCodeBlacklist() : array
+    {
+        return $this->attributeCodeBlacklist;
     }
 
     protected function getNormalizer() : NormalizerInterface
