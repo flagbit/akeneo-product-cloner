@@ -19,6 +19,11 @@ class FlagbitProductClonerExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $processedConfig = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('flagbit_product_cloner.attribute_blacklist', $processedConfig['attribute_blacklist']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
