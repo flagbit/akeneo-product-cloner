@@ -73,6 +73,21 @@ After clicking on **clone** you will see this **dialog**:
 
 Put in a new **product code** and click on **save**. After that check if all the data is correct for the new product.
 
+### Configuration
+
+You don't need to configure this bundle by default.
+The default behaviour is to clone all product or product model attributes except the unique attributes.
+In addition, you can specify a blacklist of attributes that shouldn't be cloned:
+
+``` yaml
+flagbit_product_cloner:
+    attribute_blacklist:
+        - your_attribute_code1
+        - your_attribute_code2
+        - your_attribute_code3
+        ...
+```
+
 ## Akeneo Compatibility ##
 
 This extension supports the latest Akeneo PIM CE/EE stable versions:
