@@ -70,7 +70,7 @@ class ProductModelController extends AbstractController
         SaverInterface $productModelSaver,
         ValidatorInterface $validator,
         NormalizerInterface $violationNormalizer,
-        array $attributeCodeBlacklist
+        array $attributeCodeBlacklist = []
     ) {
         $this->productModelRepository = $productModelRepository;
         $this->normalizer = $normalizer;

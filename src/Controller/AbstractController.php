@@ -14,7 +14,10 @@ abstract class AbstractController extends Controller
 
     abstract protected function getAttributeRepository() : AttributeRepositoryInterface;
 
-    abstract protected function getAttributeCodeBlacklist() : array;
+    protected function getAttributeCodeBlacklist() : array
+    {
+        return [];
+    }
 
     protected function normalizeProduct(EntityWithFamilyVariantInterface $product)
     {
