@@ -125,6 +125,7 @@ class ProductModelController extends AbstractController
 
             // clone product using Akeneo normalizer and updater for reusing code
             $normalizedProduct = $this->normalizeProduct($productModel);
+            unset($normalizedProduct['family']);
             $this->productModelUpdater->update($cloneProductModel, $normalizedProduct);
             $this->productModelUpdater->update($cloneProductModel, $content);
             $cloneProductModel->setCode($content['code']);
