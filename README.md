@@ -65,10 +65,10 @@ yarn run webpack
 
 ## How to use it ##
 Open a product and there open the **options dialog** at the **right corner**.
-You can see it here on the screen:  
+You can see it here on the screen:
 ![Product Model Clone Screen](https://raw.githubusercontent.com/Flagbit/akeneo-product-cloner/master/screens/product_model_clone.png "Product Model Clone Screen")
 
-After clicking on **clone** you will see this **dialog**:  
+After clicking on **clone** you will see this **dialog**:
 ![Product Model Clone Dialog Screen](https://raw.githubusercontent.com/Flagbit/akeneo-product-cloner/master/screens/product_model_clone_dialog.png "Product Model Clone Dialog Screen")
 
 Put in a new **product code** and click on **save**. After that check if all the data is correct for the new product.
@@ -92,7 +92,9 @@ flagbit_product_cloner:
 
 This extension supports the latest Akeneo PIM CE/EE stable versions:
 
-* 3.0 and 2.3 (LTS)
+* 2.3 (LTS)
+* 3.0 (LTS)
+* 3.2 (LTS)
 
 ## License ##
 
