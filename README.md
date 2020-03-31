@@ -14,7 +14,7 @@ This bundle is aimed to offer product clone functionality within Akeneo PIM.
 
 
 ## Installation ##
-You can simply install the package with the following command.
+You can install the package with the following command.
 
 ``` bash
 composer require flagbit/product-cloner-bundle
@@ -22,21 +22,15 @@ composer require flagbit/product-cloner-bundle
 
 ### Enable the bundle ####
 
-Enable the bundle in the kernel:
+Add the bundle to the `config/bundles.php` file:
 
 ``` php
 <?php
 
-// app/AppKernel.php
-
-protected function registerProjectBundles()
-{
-    return [
-        // ...
-        new Flagbit\Bundle\ProductClonerBundle\FlagbitProductClonerBundle(),
-        // ...
-    ];
-}
+return [
+    \Flagbit\Bundle\ProductClonerBundle\FlagbitProductClonerBundle::class => ['all' => true],
+    // ...
+];
 ```
 
 #### Import the routing ####
@@ -44,23 +38,15 @@ Now that you have activated and configured the bundle, all that is left to do is
 routing files.
 
 ``` yaml
-# app/config/routing.yml
+# config/routes/product_cloner.yml
 flagbit_product_cloner:
     resource: "@FlagbitProductClonerBundle/Resources/config/routing.yml"
-
-```
-
-Clear the cache:
-
-``` bash
-php bin/console cache:clear --env=prod
 ```
 
 Build and install the new front-end dependencies (new translations, etc.)
 
 ``` bash
-php bin/console pim:installer:assets --symlink --clean --env=prod
-yarn run webpack
+make cache assets css javascript-prod
 ```
 
 ## How to use it ##
@@ -95,6 +81,7 @@ This extension supports the latest Akeneo PIM CE/EE stable versions:
 * 2.3 (LTS)
 * 3.0 (LTS)
 * 3.2 (LTS)
+* 4.0
 
 ## License ##
 
