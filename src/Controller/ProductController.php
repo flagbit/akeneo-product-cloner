@@ -105,7 +105,7 @@ class ProductController extends AbstractController
         ConverterInterface $productValueConverter,
         NormalizerInterface $constraintViolationNormalizer,
         ProductBuilderInterface $variantProductBuilder,
-        array $attributeCodeBlacklist = []
+        array $attributeCodeBlacklist
     ) {
 
         $this->productRepository = $productRepository;
