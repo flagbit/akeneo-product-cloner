@@ -25,7 +25,6 @@
     }
   ],
   "require": {
-    "akeneo/pim-community-dev": "^4.0",
     "ext-json": "*"
   },
   "require-dev": {
