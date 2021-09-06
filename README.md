@@ -66,8 +66,7 @@ The default behaviour is to clone all product or product model attributes except
 In addition, you can specify a blacklist of attributes that shouldn't be cloned:
 
 ``` yaml
-flagbit_product_cloner:
-    attribute_blacklist:
+flagbit_product_cloner.attribute_blacklist:
         - your_attribute_code1
         - your_attribute_code2
         - your_attribute_code3
