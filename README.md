@@ -82,7 +82,8 @@ This extension supports the latest Akeneo PIM CE/EE stable versions:
 * 3.0 (LTS)
 * 3.2 (LTS)
 * 4.0
+* 5.0
 
 ## License ##
 
-The TableAttributeBundle is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+The ProductClonerBundle is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
