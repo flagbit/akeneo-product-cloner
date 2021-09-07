@@ -28,7 +28,16 @@ jobs:
                   php-version: "${{ matrix.php-versions }}"
                   extensions: "intl, xdebug, imagick, apcu"
 
-            - name: "Validate composer.json and composer.lock"
+            - name: "Validate composer.json"
               run: "composer validate --strict"
             - name: "Install PHP dependencies"
               run: "composer install --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+
+            - name: "Run PHPLint"
+              run: "vendor/bin/phplint ./src"
+
+            - name: "Run PHPCS"
+              run: "vendor/bin/phpcs -d memory_limit=-1 --standard=PSR2 --extensions=php ./src"
+
+            - name: "Run PHPSpec"
+              run: "vendor/bin/phpspec run"
