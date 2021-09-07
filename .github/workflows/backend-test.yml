@@ -44,3 +44,16 @@ jobs:
 
             - name: "Run integration tests"
               run: "vendor/bin/phpunit"
+
+            - name: "Upload PHPUnit Clover coverage file"
+              uses: "actions/upload-artifact@v2"
+              with:
+                  name: "coverage.xml"
+                  path: "build/clover.xml"
+
+            - name: "Upload PHPUnit JUnit coverage file"
+              uses: "actions/upload-artifact@v2"
+              with:
+                  name: "junit.xml"
+                  path: "build/junit.xml"
+
