@@ -32,5 +32,8 @@
     "phpspec/phpspec": "*",
     "squizlabs/php_codesniffer": "*",
     "overtrue/phplint": "*"
+  },
+  "conflict": {
+    "akeneo/pim-enterprise-dev": "*"
   }
 }
