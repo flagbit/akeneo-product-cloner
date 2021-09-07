@@ -41,3 +41,6 @@ jobs:
 
             - name: "Run PHPSpec"
               run: "vendor/bin/phpspec run"
+
+            - name: "Run integration tests"
+              run: "vendor/bin/phpunit"
