@@ -1,3 +1,8 @@
 /composer.lock
 /vendor
 /.idea
+
+# Files generated during tests
+build/
+.phpunit.result.cache
+tests/Kernel/var
