@@ -16,6 +16,12 @@
       "Flagbit\\Bundle\\ProductClonerBundle\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Flagbit\\Bundle\\ProductClonerBundle\\Test\\": "tests/",
+      "AkeneoTest\\": "vendor/akeneo/pim-community-dev/tests/back"
+    }
+  },
   "repositories": [
     {
       "type": "vcs",
@@ -31,7 +37,8 @@
   "require-dev": {
     "phpspec/phpspec": "*",
     "squizlabs/php_codesniffer": "*",
-    "overtrue/phplint": "*"
+    "overtrue/phplint": "*",
+    "phpunit/phpunit": "^8.0"
   },
   "conflict": {
     "akeneo/pim-enterprise-dev": "*"
