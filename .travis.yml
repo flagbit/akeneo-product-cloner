@@ -2,7 +2,7 @@ language: php
 
 sudo: false
 
-dist: trusty
+dist: focal
 
 env:
   - COMPOSER_OPTS="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
@@ -23,7 +23,7 @@ before_install:
     - echo memory_limit = -1 >> $INI
     # enable apcu
     - echo "extension=apcu.so" >> $INI
-    - yes '' | pecl install imagick
+    - yes '' | pecl install imagick gd
 
 install:
   - travis_retry composer install $COMPOSER_OPTS
