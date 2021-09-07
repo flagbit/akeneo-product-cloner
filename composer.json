@@ -18,8 +18,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Flagbit\\Bundle\\ProductClonerBundle\\Test\\": "tests/",
-      "AkeneoTest\\": "vendor/akeneo/pim-community-dev/tests/back"
+      "Flagbit\\Bundle\\ProductClonerBundle\\Test\\": "tests/"
     }
   },
   "repositories": [
@@ -38,7 +37,10 @@
     "phpspec/phpspec": "*",
     "squizlabs/php_codesniffer": "*",
     "overtrue/phplint": "*",
-    "phpunit/phpunit": "^8.0"
+    "phpunit/phpunit": "^8.0",
+    "symfony/debug-bundle": "^4.4",
+    "symfony/web-profiler-bundle": "^4.4",
+    "symfony/web-server-bundle": "^4.4"
   },
   "conflict": {
     "akeneo/pim-enterprise-dev": "*"
