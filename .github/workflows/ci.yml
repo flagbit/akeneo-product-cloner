@@ -1,0 +1,59 @@
+name: "CI"
+
+on:
+    push: ~
+    pull_request: ~
+    schedule:
+        - cron: "0 0 1 * *"
+
+jobs:
+    backend:
+        runs-on: "ubuntu-20.04"
+        strategy:
+            matrix:
+                php-versions: ['7.4']
+
+        steps:
+            - uses: "actions/checkout@v2.0.0"
+            - name: "Cache dependencies installed with composer"
+              uses: "actions/cache@v1.0.3"
+              with:
+                  path: "~/.composer/cache"
+                  key: "composer-${{ matrix.php-version }}-${{ hashFiles('composer.json') }}"
+                  restore-keys: "composer-${{ matrix.php-version }}-"
+
+            - name: "Setup PHP Action"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "${{ matrix.php-versions }}"
+                  extensions: "intl, xdebug, imagick, apcu"
+
+            - name: "Validate composer.json"
+              run: "composer validate --strict"
+            - name: "Install PHP dependencies"
+              run: "composer install --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+
+            - name: "Run PHPLint"
+              run: "vendor/bin/phplint ./src"
+
+            - name: "Run PHPCS"
+              run: "vendor/bin/phpcs -d memory_limit=-1 --standard=PSR2 --extensions=php ./src"
+
+            - name: "Run PHPSpec"
+              run: "vendor/bin/phpspec run"
+
+            - name: "Run integration tests"
+              run: "vendor/bin/phpunit"
+
+            - name: "Upload PHPUnit Clover coverage file"
+              uses: "actions/upload-artifact@v2"
+              with:
+                  name: "coverage.xml"
+                  path: "build/clover.xml"
+
+            - name: "Upload PHPUnit JUnit coverage file"
+              uses: "actions/upload-artifact@v2"
+              with:
+                  name: "junit.xml"
+                  path: "build/junit.xml"
+

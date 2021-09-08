@@ -1,6 +1,6 @@
 # Flagbit ProductClonerBundle for Akeneo PIM
 
-[![Build Status](https://img.shields.io/travis/flagbit/akeneo-product-cloner/master.svg?style=flat-square)](https://travis-ci.org/flagbit/akeneo-product-cloner?branch=master)
+[![CI](https://github.com/flagbit/akeneo-product-cloner/actions/workflows/ci.yml/badge.svg)](https://github.com/flagbit/akeneo-product-cloner/actions/workflows/ci.yml)
 [![Total Downloads](https://poser.pugx.org/flagbit/product-cloner-bundle/downloads?format=flat-square)](https://packagist.org/packages/flagbit/product-cloner-bundle)
 [![Quality Score](https://img.shields.io/scrutinizer/g/flagbit/akeneo-product-cloner.svg?style=flat-square)](https://scrutinizer-ci.com/g/Flagbit/akeneo-product-cloner)
 [![Packagist Version](https://img.shields.io/packagist/v/flagbit/product-cloner-bundle.svg?style=flat-square)](https://packagist.org/packages/flagbit/product-cloner-bundle)
@@ -12,8 +12,11 @@ This bundle is aimed to offer product clone functionality within Akeneo PIM.
 * Clone a product model
 * Clone a product or a variant product
 
+> _Note:_ As of Akeneo 5, the Enterprise Edition ships with an included clone feature, therefore this bundle
+is not compatible with Akeneo 5 Enterprise Edition! For the Akeneo 5 Community Edition, the bundle will work as before.
 
 ## Installation ##
+
 You can install the package with the following command.
 
 ``` bash
@@ -66,8 +69,7 @@ The default behaviour is to clone all product or product model attributes except
 In addition, you can specify a blacklist of attributes that shouldn't be cloned:
 
 ``` yaml
-flagbit_product_cloner:
-    attribute_blacklist:
+flagbit_product_cloner.attribute_blacklist:
         - your_attribute_code1
         - your_attribute_code2
         - your_attribute_code3
@@ -82,7 +84,8 @@ This extension supports the latest Akeneo PIM CE/EE stable versions:
 * 3.0 (LTS)
 * 3.2 (LTS)
 * 4.0
+* 5.0
 
 ## License ##
 
-The TableAttributeBundle is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+The ProductClonerBundle is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
