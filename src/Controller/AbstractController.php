@@ -23,6 +23,11 @@ abstract class AbstractController extends Controller
     {
         $normalizedProduct = $this->getNormalizer()->normalize($product, 'external_api');
 
+        # @see https://github.com/flagbit/akeneo-product-cloner/issues/24
+        if ($normalizedProduct['values'] instanceof \stdClass) {
+            $normalizedProduct['values'] = [];
+        }
+
         while ($parent = $product->getParent()) {
             foreach ($parent->getValuesForVariation() as $value) {
                 //this workaround removes the attributes of all parent models, as the getValues() Method,
